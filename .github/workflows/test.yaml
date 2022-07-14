@@ -47,7 +47,7 @@ jobs:
           pr-number: ${{ steps.create-pr.outputs.pull-request-number }}
 
       - name: verify the action
-         env:
+        env:
            GH_TOKEN: ${{ secrets.GIT_TOKEN }}
         run: |
           IS_DRAFT=$(gh pr view 13 --json isDraft  --jq .isDraft)
