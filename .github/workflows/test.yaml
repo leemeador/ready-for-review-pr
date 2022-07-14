@@ -49,6 +49,7 @@ jobs:
       - name: verify the action
         env:
            GH_TOKEN: ${{ secrets.GIT_TOKEN }}
+        shell: bash
         run: |
           set -o xtrace
           export IS_DRAFT="$(gh pr view ${{ steps.create-pr.outputs.pull-request-number }} --json isDraft  --jq .isDraft)"
