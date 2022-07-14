@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v3.0.2
+        with:
+          ref: ${{ github.head_ref }}
 
       - name: Create commits
         run: |
@@ -31,7 +33,6 @@ jobs:
         uses: peter-evans/create-pull-request@v4
         with:
           draft: true
-          base: ${{ github.head_ref }}
  
       - name: Check outputs
         if: ${{ steps.create-pr.outputs.pull-request-number }}
