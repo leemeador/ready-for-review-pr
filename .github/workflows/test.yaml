@@ -54,6 +54,6 @@ jobs:
           set -o xtrace
           export IS_DRAFT="$(gh pr view ${{ steps.create-pr.outputs.pull-request-number }} --json isDraft  --jq .isDraft)"
           echo "isDraft: ${ IS_DRAFT }"
-          if [ "$IS_DRAFT" = "true" ]; then
+          if [ "${ IS_DRAFT }" = "true" ]; then
               exit 1
           fi
