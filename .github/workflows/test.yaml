@@ -40,7 +40,7 @@ jobs:
           echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"      
 
       - name: Mark as Ready to release
-        uses: leemeador/ready-for-release-pr@v1.0.0 # please use latest version
+        uses: ./
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           pr-number: ${{ steps.cpr.outputs.pull-request-number }}
