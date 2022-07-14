@@ -21,7 +21,7 @@ jobs:
         run: |
           git config user.name 'leemeador'
           git config user.email 'lee@leemeador.com'
-          test -d testfiles || mkdir testfiles
+          test -d ./testfiles || mkdir ./testfiles
           date +%s > testfiles/report.txt
           git commit -am "Modify tracked file during workflow"
           date +%s > testfiles/new-report.txt
