@@ -50,7 +50,7 @@ jobs:
         env:
            GH_TOKEN: ${{ secrets.GIT_TOKEN }}
         run: |
-          IS_DRAFT=$(gh pr view 13 --json isDraft  --jq .isDraft)
+          IS_DRAFT=$(gh pr view ${{ steps.create-pr.outputs.pull-request-number }} --json isDraft  --jq .isDraft)
           if [ "$IS_DRAFT" = "true" ]; then
               exit 1
           fi
