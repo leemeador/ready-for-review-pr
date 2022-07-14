@@ -1,0 +1,53 @@
+name: Test GitHub Action
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: test the action
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3.0.2
+
+      - name: create PR
+      - name: Create commits
+        run: |
+          git config user.name 'leemeador'
+          git config user.email 'lee@leemeador.com'
+          date +%s > testfiles/report.txt
+          git commit -am "Modify tracked file during workflow"
+          date +%s > testfiles/new-report.txt
+          git add -A
+          git commit -m "Add untracked file during workflow"
+
+      - name: Create Pull Request
+        id: create-pr
+        uses: peter-evans/create-pull-request@v4
+        with:
+          draft: true
+ 
+      - name: Check outputs
+        if: ${{ steps.cpr.outputs.pull-request-number }}
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"      
+
+      - name: Mark as Ready to release
+        uses: leemeador/ready-for-release-pr@v1.0.0 # please use latest version
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pr-number: ${{ steps.cpr.outputs.pull-request-number }}
+
+      - name: verify the action
+        run: |
+          IS_DRAFT=$(gh pr view 13 --json isDraft  --jq .isDraft)
+          if [ "$IS_DRAFT" = "true" ]; then
+              exit 1
+          fi
