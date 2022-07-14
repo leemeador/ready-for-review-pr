@@ -1,0 +1,106 @@
+name: Mark PR as Ready to Review
+description: Converts the given pull request from a draft to be ready-to-review
+branding:
+  icon: git-pull-request
+  color: gray-dark
+
+inputs:
+  pr-number:
+    required: false
+    description: GitHub pull request number
+    default: ${{ github.event.number }}
+  owner:
+    required: false
+    description: GitHub pull request's owner or organization
+    default: ${{  github.repository_owner }}
+  repo:
+    required: false
+    description: GitHub pull request's repo name
+    default: ${{ github.event.repository.name }}
+secrets:
+  token:
+    required: false
+    description: Github Token used to make API request to mutate pull requests
+    default: ${{ github.token }}
+
+runs:
+  using: composite
+  steps:
+    - name: Read repo and pr info via GraphQL
+      uses: octokit/graphql-action@v2.2.20
+      id: get_issue_info
+      with:
+        query: |
+          query GetPrInfo($owner:String!, $repo:String!, $prnumber:Int!) {
+            repository: repository(owner:$owner, name:$repo) {
+              id
+              nameWithOwner
+              pullRequest(number:$prnumber) {
+                  title
+                  id
+                  number
+                  createdAt
+                  closedAt
+              }
+            }
+          }
+        owner: ${{ inputs.owner }}
+        repo: ${{ inputs.repo }}
+        prnumber: ${{ inputs.pr-number }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.token }}
+
+    - name: Show Repo Info
+      env:
+        REPOSITORY_DATA: ${{ steps.get_issue_info.outputs.data }}
+      run: |
+        echo "issue/repo info: ${REPOSITORY_DATA}"
+
+    - name: Convert PR to ready-for-review using GraphQL
+      uses: octokit/graphql-action@v2.2.20
+      id: mark_ready_for_review
+      with:
+        query: |
+          mutation convertPullRequest($pullrequestid: ID!) {
+            result: convertPullRequestToDraft(input: { pullRequestId: $pullrequestid }) {
+              pullRequest {
+                repository {
+                  id
+                  nameWithOwner
+                  owner {
+                    login
+                  }
+                  name
+                }
+                title
+                id
+                number
+                createdAt
+                closedAt
+              }
+            }
+          }
+        pullrequestid: ${{ fromJSON(steps.get_issue_info.outputs.data).repository.pullRequest.id }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.token }}
+
+    - name: Log convetsion info
+      run: |
+        echo 'pr/repo info: ${{ steps.get_issue_info.outputs.data }}'
+        echo 'conversion result: ${{ steps.mark_ready_for_review.outputs.data }}'
+        
+#     - name: Mark as draft
+#       shell: bash
+#       run: |
+#         echo ${{ inputs.token }} | gh auth login --with-token
+#         gh api graphql -F id=${{ inputs.pull-request-node-id }}  -f query='
+#           mutation($id: ID!) {
+#             convertPullRequestToDraft(input: { pullRequestId: $id }) {
+#               pullRequest {
+#                 id
+#                 number
+#                 isDraft
+#               }
+#             }
+#           }
+#         '
