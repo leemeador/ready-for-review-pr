@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Mark as Ready to release
-        uses: leemeador//ready-for-release-pr@v1.0.0 # please use latest version
+        uses: leemeador/ready-for-release-pr@v1.0.0 # please use latest version
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           pr-number: 77
