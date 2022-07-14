@@ -41,10 +41,10 @@ When calling this action from a workflow triggered by a `pull_request` event, it
 
 For a 'pull-request' event you can get the number this way (or just let it default):
 
- - run: |
-          echo github.event.number = ${{ github.event.number  }}
-          echo github.event.pull_request.number = ${{ github.event.pull_request.number }}
-          echo github.event.issue.number = ${{ github.event.issue.number }}
+  - run: |
+      echo github.event.number = ${{ github.event.number  }}
+      echo github.event.pull_request.number = ${{ github.event.pull_request.number }}
+      echo github.event.issue.number = ${{ github.event.issue.number }}
 
 This GitHub Marketplace action says it will find the PR number for a push event:
 
