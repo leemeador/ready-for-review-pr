@@ -43,7 +43,7 @@ jobs:
       - name: Mark as Ready to release
         uses: ./
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GIT_TOKEN }}
           pr-number: ${{ steps.create-pr.outputs.pull-request-number }}
 
       - name: verify the action
