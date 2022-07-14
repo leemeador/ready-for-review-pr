@@ -18,14 +18,13 @@ jobs:
 
       - name: Create commits
         run: |
+          set -o xtrace
           git config user.name 'leemeador'
           git config user.email 'lee@leemeador.com'
           test -d ./testfiles || mkdir ./testfiles
           date +%s > testfiles/report.txt
-          git commit -am "Modify tracked file during workflow"
-          date +%s > testfiles/new-report.txt
-          git add -A
-          git commit -m "Add untracked file during workflow"
+          git add testfiles/report.txt
+          git commit -m "Modify tracked file during workflow"
 
       - name: Create Pull Request
         id: create-pr
