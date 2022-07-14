@@ -75,6 +75,7 @@ runs:
                 title
                 id
                 number
+                isDraft
                 createdAt
                 closedAt
               }
