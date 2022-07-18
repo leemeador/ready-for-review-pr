@@ -1,5 +1,5 @@
-# ready-for-release-pr
-GitHub Action to Take a PR from Draft to Ready-for-Release
+# ready-for-review-pr
+GitHub Action to Take a PR from Draft to Ready-for-Review
 
 Converts the current (or specified) pull request to a draft
 
@@ -16,18 +16,18 @@ Converts the current (or specified) pull request to a draft
 
 ```yaml
 # Marks all newly opened pull requests as drafts
-name: Mark as Ready to Release on Open
+name: Mark as Ready to Review on Open
 on:
   pull_request:
     types: [ opened ]
 
 jobs:
   mark-as-draft:
-    name: Mark as Ready to Release
+    name: Mark as Ready to Review
     runs-on: ubuntu-latest
     steps:
-      - name: Mark as Ready to release
-        uses: leemeador/ready-for-release-pr@v1.0.0 # please use latest version
+      - name: Mark as Ready to Review
+        uses: leemeador/ready-for-review-pr@v1.0.0 # please use latest version
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           pull-request-number: 77
