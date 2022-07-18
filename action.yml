@@ -25,7 +25,10 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: |
+    - name: Move PR from draft to ready-to-review
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+      run: |
         gh pr ready --repo  ${{ inputs.owner }}/${{ inputs.repo }} ${{ inputs.pr-number }}
       shell: bash
       
