@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Mark as Ready to Review
-        uses: leemeador/ready-for-review-pr@v1.0.4 # please use latest version
+        uses: leemeador/ready-for-review-pr@v1.0.3 # please use latest version
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           pull-request-number: 77
