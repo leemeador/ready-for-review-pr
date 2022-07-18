@@ -58,7 +58,7 @@ jobs:
         uses: ./
         with:
           token: ${{ secrets.GIT_TOKEN }}
-          pr-number: ${{ steps.create-pr.outputs.pull-request-number }}
+          pull-request-number: ${{ steps.create-pr.outputs.pull-request-number }}
 
       - name: verify the action
         env:
