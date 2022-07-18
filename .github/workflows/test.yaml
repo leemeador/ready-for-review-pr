@@ -54,7 +54,7 @@ jobs:
               exit 1
           fi
 
-      - name: Mark as Ready to release
+      - name: Mark as Ready to Review
         uses: ./
         with:
           token: ${{ secrets.GIT_TOKEN }}
