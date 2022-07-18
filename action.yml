@@ -27,6 +27,7 @@ runs:
   steps:
     - run: |
         gh pr ready --repo  ${{ inputs.owner }}/${{ inputs.repo }} ${{ inputs.pr-number }}
+      shell: bash
       
     - name: Read repo and pr info via GraphQL
       uses: octokit/graphql-action@v2.2.20
