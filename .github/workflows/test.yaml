@@ -34,6 +34,7 @@ jobs:
         with:
           draft: true
  
+      # If PR already exists from a failed test and PR is not in dreaft, it will not be changed to draft
       - name: Check outputs
         if: ${{ steps.create-pr.outputs.pull-request-number }}
         run: |
@@ -49,6 +50,7 @@ jobs:
           export IS_DRAFT="$(gh pr view ${{ steps.create-pr.outputs.pull-request-number }} --json isDraft  --jq .isDraft)"
           echo "isDraft: ${IS_DRAFT}"
           if [ "${IS_DRAFT}" = "false" ]; then
+              echo "ERROR: PR already exists as ready-to-review. Please delete the PR and rerun this test."
               exit 1
           fi
 
