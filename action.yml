@@ -25,6 +25,9 @@ inputs:
 runs:
   using: composite
   steps:
+    - run: |
+        gh pr ready --repo  ${{ inputs.owner }}/${{ inputs.repo }} ${{ inputs.pr-number }}
+      
     - name: Read repo and pr info via GraphQL
       uses: octokit/graphql-action@v2.2.20
       id: get_issue_info
@@ -40,6 +43,7 @@ runs:
                   number
                   createdAt
                   closedAt
+                  isDraft
               }
             }
           }
@@ -53,43 +57,43 @@ runs:
       env:
         REPOSITORY_DATA: ${{ steps.get_issue_info.outputs.data }}
       run: |
-        echo "issue/repo info: ${REPOSITORY_DATA}"
+        echo "issue/repo info after change: ${REPOSITORY_DATA}"
       shell: bash
 
-    - name: Convert PR to ready-for-review using GraphQL
-      uses: octokit/graphql-action@v2.2.20
-      id: mark_ready_for_review
-      with:
-        query: |
-          mutation convertPullRequest($pullrequestid: ID!) {
-            result: convertPullRequestToDraft(input: { pullRequestId: $pullrequestid }) {
-              pullRequest {
-                repository {
-                  id
-                  nameWithOwner
-                  owner {
-                    login
-                  }
-                  name
-                }
-                title
-                id
-                number
-                isDraft
-                createdAt
-                closedAt
-              }
-            }
-          }
-        pullrequestid: ${{ fromJSON(steps.get_issue_info.outputs.data).repository.pullRequest.id }}
-      env:
-        GITHUB_TOKEN: ${{ inputs.token }}
+#     - name: Convert PR to ready-for-review using GraphQL
+#       uses: octokit/graphql-action@v2.2.20
+#       id: mark_ready_for_review
+#       with:
+#         query: |
+#           mutation convertPullRequest($pullrequestid: ID!) {
+#             result: convertPullRequestToDraft(input: { pullRequestId: $pullrequestid }) {
+#               pullRequest {
+#                 repository {
+#                   id
+#                   nameWithOwner
+#                   owner {
+#                     login
+#                   }
+#                   name
+#                 }
+#                 title
+#                 id
+#                 number
+#                 isDraft
+#                 createdAt
+#                 closedAt
+#               }
+#             }
+#           }
+#         pullrequestid: ${{ fromJSON(steps.get_issue_info.outputs.data).repository.pullRequest.id }}
+#       env:
+#         GITHUB_TOKEN: ${{ inputs.token }}
 
-    - name: Log conversion info
-      run: |
-        echo 'pr/repo info: ${{ steps.get_issue_info.outputs.data }}'
-        echo 'conversion result: ${{ steps.mark_ready_for_review.outputs.data }}'
-      shell: bash
+#     - name: Log conversion info
+#       run: |
+#         echo 'pr/repo info: ${{ steps.get_issue_info.outputs.data }}'
+#         echo 'conversion result: ${{ steps.mark_ready_for_review.outputs.data }}'
+#       shell: bash
         
 #     - name: Mark as draft
 #       shell: bash
