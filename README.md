@@ -30,7 +30,7 @@ jobs:
         uses: leemeador/ready-for-release-pr@v1.0.0 # please use latest version
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          pr-number: 77
+          pull-request-number: 77
           owner: leemeador
           repo: repo-name
 ```
